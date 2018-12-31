@@ -1,13 +1,13 @@
 .ytd-video-primary-info-renderer {
-    color:orange;
+    color: orange;
     font-size: 20px;
 }
- 
+
 .gengooSubtitle {
     width: 100%;
     padding: 10px;
     background-color: rgba(0, 0, 0, 0.548);
-    z-index: 9999!important;
+    z-index: 9999 !important;
     position: absolute;
     bottom: 6vh;
     font-size: 20px;
@@ -17,14 +17,14 @@
 
 #gengooWord {
     cursor: pointer;
-    z-index: 999999!important;
+    z-index: 999999 !important;
     -moz-user-select: none;
-   -khtml-user-select: none;
-   -webkit-user-select: none;
-   -ms-user-select: none;
-   user-select: none;
-   padding-top: 10px;
-   padding-bottom: 10px;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 .choosenTrans {
@@ -32,27 +32,27 @@
     background-color: rgba(0, 0, 0, 0.548);
     border-radius: 3px;
     position: absolute;
-    font-family: "YouTube Noto",Roboto,Arial,Helvetica,sans-serif;
+    font-family: "YouTube Noto", Roboto, Arial, Helvetica, sans-serif;
     font-size: 15px;
     z-index: 99;
     display: none;
     cursor: pointer;
     text-align: center;
     border: 1px solid black;
-  }
+}
 
 
 .gengooSubtitleClosed {
-    filter: grayscale(100%)
-           contrast(120%);
+    filter: grayscale(100%) contrast(120%);
 }
+
 .gengooSubmit {
     cursor: pointer;
 }
 
 
 .captions-text {
-    visibility: hidden!important;
+    display: none;
 }
 
 
