@@ -1,0 +1,341 @@
+ifUrlChange()
+
+var request = {
+    state: false,
+
+}
+
+
+if (window.location.href.includes("https://www.youtube.com/watch")) {
+            console.log("%c GENGOO IS OPENED !", 'background: #222;  bakcground-color: green')
+             main()
+        }
+
+
+
+        
+
+function main() {
+    if (document.querySelector(".ytp-subtitles-button").style.display != 'none') {
+        console.log(document.querySelector(".ytp-subtitles-button").style.display)
+        hideYoutubeSubtitleIcon(); // TO HIDE YOUTUBE'S SUBTITLE ICON
+        $(".ytp-right-controls").prepend("<img class='gengooSubmit gengooSubtitleClosed' src='https://firebasestorage.googleapis.com/v0/b/gengoo2192.appspot.com/o/icon.png?alt=media&token=397f0445-7336-4b93-a3b5-06e6f10a49a2' />")
+
+        var listenerScrnBtn = false
+
+        if ($('.ytp-fullscreen-button').attr('title') == 'Full screen') { // TO SET SUBTITLE POSITION
+            $(".gengooSubmit").height('54px'); // DEFAULT VALUE IN EVERY SCREEN
+            listenerScrnBtn = false;
+        } else {
+            $(".gengooSubmit").height('36px'); // DEFAULT VALUE IN EVERY SCREEN
+            listenerScrnBtn = true;
+        }
+
+        $('.ytp-fullscreen-button').on('click', () => { // TO SET SUBTITLE POSITION WHILE CLICKING TO THE SCREEN BUTTON
+            if (listenerScrnBtn == false) {
+                $(".gengooSubmit").height('36px'); // DEFAULT VALUE IN EVERY SCREEN
+                listenerScrnBtn = true;
+            } else {
+                listenerScrnBtn = false;
+                $(".gengooSubmit").height('54px'); // DEFAULT VALUE IN EVERY SCREEN
+            }
+        });
+
+
+        $(".gengooSubmit").on('click', () => {
+            console.log("CLICKED, GENGOO SUBTITLE IS", !request.state);
+
+
+
+
+            if (request.state == false) { // TO CHANGE GENGOO SUBTITLE STATE
+                request.state = true;
+            } else {
+                request.state = false;
+            }
+
+
+
+
+
+
+
+            if (request.state === true) {
+                $(".gengooSubmit").removeClass("gengooSubtitleClosed"); // TO HIGHLIGHT IT
+
+                if ($('.ytp-subtitles-button').attr("aria-pressed") == "false") { // IF THERE IS NO SUBTITLE THAN OPEN IT
+                    toggleYoutubeSubtitle();
+                }
+
+
+                isSubtitleShowing(".captions-text").then(() => { // AFTER BEING SURE THAT YOUTUBE'S SUBTITLES ARE OPEN
+
+                    hideYoutubeSubtitle();
+
+                    appendGengooSubtitle();
+
+                    textPusher();
+
+                    waitForClick();
+
+                    hoverSubtitle()
+
+                })
+
+
+            } else if (request.state == false) {
+                $(".gengooSubmit").addClass("gengooSubtitleClosed"); // TO UNHIGHLIGHT SUBMIT BUTTON
+
+                removeGengooSubtitle();
+
+            }
+        });
+    }
+}
+
+
+
+
+
+function ifUrlChange() {  // REFRESH IF URL CHANGES :(
+    console.log(window.location.href)
+    var oldUrl = window.location.href;
+    setInterval(() => {
+        if (window.location.href != oldUrl) {
+            oldUrl = window.location.href;
+            console.log(window.location.href)
+            window.location.reload()
+        }
+    }, 300)
+
+}
+
+
+ 
+
+function popUp(e, translatedText, translatedText1, translatedText2) {
+    removeChosenTrans();
+    appendTrans();
+    var choosenTrans = $('.choosenTrans')
+    choosenTrans.addClass("selected");
+    var clickedElement = $(e.target);
+    document.querySelectorAll("#gengooWord").forEach(element => { // TO REMOVE BACKGROUND IF THERE IS ON ANOTHER ONE
+        $(element).css({
+            "background-color": "transparent"
+        })
+    })
+    /* PUSH DOM A CONTAINER FOR TRANSLATE OBJECTS */
+    choosenTrans.append("<span class='translatedText'>" + translatedText + "</span>");
+
+    if (translatedText1) {
+        choosenTrans.append("<br><span class='translatedText' >" + translatedText1 + "</span>");
+
+    }
+    if (translatedText2) {
+        choosenTrans.append("<br><span class='translatedText'>" + translatedText2 + "</span>");
+
+    }
+    var itemTop = e.currentTarget.offsetTop - choosenTrans.innerHeight();
+    var itemLeft = e.toElement.offsetLeft;
+    var itemWidth = e.target.offsetWidth // the width of the choosenTrans div element
+
+    choosenTrans.offset({ // POSITION OF THE SPAN OF TRANSLATED WORD
+        top: itemTop,
+        left: itemLeft
+    }).fadeIn(400);
+    var tl = new TimelineMax()
+    tl
+        .set(clickedElement, {
+            "borderRadius": "4px 4px 4px 4px"
+        })
+        .to(clickedElement, 0.2, {
+            backgroundColor: "#5C9531",
+            ease: Power3.easeOut
+        })
+
+
+}
+
+function closePopupIfResize() {
+
+    $(window).resize(function () {
+        removeChosenTrans();
+    });
+}
+
+function removeChosenTrans() {
+    $(".choosenTrans").remove();
+
+}
+
+
+function appendTrans() {
+    $(".html5-video-player").append("<div class='choosenTrans'> </div>")
+    hoverSubtitle()
+}
+
+
+function appendGengooSubtitle() {
+    if ($('.gengooSubtitle').length == 0) {
+        $(".html5-video-player").append("<div class='gengooSubtitle'> </div>");
+        closePopupIfResize();
+    }
+}
+
+
+function waitForClick() {
+    $('.gengooSubtitle').click((e) => {
+        do { // DO WHILE BECAUSE WE WANT IT TO START ONCE
+            console.log(e);
+            translate(e, e.target.innerText); // FIRST TRANSLATE WORD THAN INITIALIZE FOR UI
+
+        } while (false)
+    })
+}
+
+function textPusher() {
+    var oldCaptions = '';
+
+    setInterval(() => {
+
+        if ($(".captions-text").text() != oldCaptions) { // IF THERE IS A CHANGE IN YOUTUBE'S SUBTITLES
+            removeChosenTrans() // REMOVE TRANS OBJ IF THERE IS
+            $(".gengooSubtitle").empty(); // MAKE GENGOO SUB. BLANK
+            $(".captions-text").text().replace('?', '? ').replace('.', '. ').replace('!', '! ').replace(/\xA0/g, ' ').split(" ").forEach(element => { //SPLIT IT AS WORDS
+                $(".gengooSubtitle").append("<span id='gengooWord'>" + element + " </span>"); // MAKE EVERY WORD A SPAN
+                oldCaptions = $(".captions-text").text(); // EQUAL THE TEXTS
+            });
+        }
+    }, 100);
+}
+
+function pauseVideoSequence(time) {
+    if (isVideoPlaying() === true) {
+        console.log("TRUE");
+
+        $(".ytp-play-button").click();
+
+        setTimeout(() => {
+            $(".ytp-play-button").click();
+
+        }, time)
+    } else {
+        console.log("Already paused!");
+
+    }
+
+}
+
+function isVideoPlaying() {
+    if ($(".ytp-play-button").attr('aria-label').indexOf('Duraklat') != -1 || $(".ytp-play-button").attr('aria-label').indexOf('Pause') != -1) { // PLAYING //MUST BE INDEXOF
+        return true
+
+    } else if ($(".ytp-play-button").attr('aria-label').indexOf('Oynat') != -1 || $(".ytp-play-button").attr('aria-label').indexOf('Play') != -1) { // PAUSED //MUST BE INDEXOF
+        return false
+
+    }
+}
+
+function toggleYoutubeSubtitle() {
+    $(".ytp-subtitles-button").click();
+}
+
+
+function hideYoutubeSubtitleIcon() {
+
+    $(".ytp-subtitles-button").css({
+        "display": "none"
+    });
+}
+
+function hideYoutubeSubtitle() {
+
+    setInterval(() => {
+
+        $(".captions-text").css({
+            "visibility": "hidden"
+        });
+    }, 1000);
+
+}
+
+function removeGengooSubtitle() {
+    $(".gengooSubtitle").remove();
+
+}
+
+
+
+
+
+async function translate(e, word) {
+
+    if (e.target.id == "gengooWord") {
+        var request = new XMLHttpRequest();
+        var words = [];
+        request.open('GET', 'https://us-central1-gengoo2192.cloudfunctions.net/translateApi/en/tr/' + word, true);
+        request.onload = function () {
+
+            // Begin accessing JSON data here
+            var data = JSON.parse(this.response); // Begin accessing JSON data here
+
+            if (request.status >= 200 && request.status < 400) {
+                popUp(e, data[0], data[1], data[2]); // NOW JUST FIRST TRANSLATION IS SENT TO POPUP
+
+            } else {
+                console.log('error');
+            }
+        }
+        request.send();
+    }
+}
+
+async function isSubtitleShowing(selector) {
+    return new Promise(resolve => {
+        var checkExist = setInterval(async function () {
+            if ($(selector).length) {
+                clearInterval(checkExist);
+                resolve(true);
+            }
+        }, 100)
+    });
+
+
+}
+
+
+function hoverSubtitle() {
+
+
+    $('.gengooSubtitle').mouseleave(function () {
+        setTimeout(() => {
+            if (isVideoPlaying() === false) {
+                console.log(66);
+                $(".ytp-play-button").click();
+                var tl = new TimelineMax()
+                tl
+                    .to('.choosenTrans', 0.15, {
+                        y: 20,
+                        opacity: 0,
+                        delay: 0.2
+                    })
+                    .to($(".selected"), 0.2, {
+                        backgroundColor: "red",
+                        ease: Power3.easeOut,
+                        delay: 0.2
+                    })
+                $(".selected").removeClass()
+            }
+        }, 50);
+
+    })
+
+    $('.gengooSubtitle, .choosenTrans').mouseover(function () {
+
+
+        if (isVideoPlaying() === true) {
+            $(".ytp-play-button").click();
+        }
+
+    });
+}

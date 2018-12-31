@@ -1,0 +1,198 @@
+@import url('https://fonts.googleapis.com/css?family=Exo:400,500');
+body {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    min-width: 250px;
+    min-height: 160px;
+}
+.loading{
+    position: fixed;
+    background-color: #f0f4f0;
+    z-index: 9999999999;
+    height: 100%;
+}
+.loading>svg {
+    width: 60%;
+    margin-left: 20%;
+}
+.home {
+    background-image: url('./images/backgroundExtension.png');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 272px 340px;
+    height: 340px;
+    width: 272px;
+}
+.logo img {
+    height: 100px;
+    width: 100px;
+    margin-left: 86px;
+    margin-top: 7px;
+    position: absolute;
+}
+input[type=email] {
+    height: 25px;
+    width: 192px;
+    margin-left: 27px;
+    margin-top: 125px;
+    position: absolute;
+    border: 0;
+    padding-left: 30px;
+    font-size: 11px;
+    font-weight: 300;
+    font-family: 'Exo', sans-serif;
+    box-shadow: 0 2px 0 0 gray;
+    background-image: url('./images/mail.png');
+    background-size: 20px 20px;
+    background-position: 1px;
+    background-repeat: no-repeat;
+    -webkit-filter: grayscale(1);
+    filter: grayscale(1);
+    transition: all .15s ease-in-out;
+}
+input[type=email]:focus {
+    outline: none;
+    box-shadow: 0 2px 00 rgb(0, 173, 226);
+    background-size: 25px 25px;
+    -webkit-filter: grayscale(0);
+    filter: grayscale(0);
+}
+input[type=password] {
+    height: 25px;
+    width: 192px;
+    margin-left: 27px;
+    margin-top: 174px;
+    position: absolute;
+    border: 0;
+    padding-left: 30px;
+    font-size: 11px;
+    font-weight: 300;
+    font-family: 'Exo', sans-serif;
+    box-shadow: 0 2px 0 0 gray;
+    background-image: url('./images/key.png');
+    background-size: 20px 20px;
+    background-position: 1px;
+    background-repeat: no-repeat;
+    -webkit-filter: grayscale(1);
+    filter: grayscale(1);
+    transition: all .15s ease-in-out;
+}
+input[type=password]:focus {
+    outline: none;
+    box-shadow: 0 2px 00 #00ade2;
+    background-size: 25px 25px;
+    -webkit-filter: grayscale(0);
+    filter: grayscale(0);
+}
+input[type=button] {
+    width: 154px;
+    height: 25px;
+    margin-left: 59px;
+    margin-top: 225px;
+    position: absolute;
+    border-radius: 25px;
+    background-color: #F7584A;
+    color: white;
+    text-align: center;
+    font-family: 'Exo', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    border: 0;
+    box-shadow: 0 2px 0 0 #B90000;
+    cursor: pointer;
+    transition: all .15s ease-in-out;
+}
+input[type=button]:hover {
+    background-color: rgb(255, 104, 91);
+}
+input[type=button]:focus {
+    outline: none;
+}
+span {
+    display: block;
+    margin-top: 260px;
+    position: absolute;
+    text-align: center;
+    width: 272px;
+    font-family: 'Exo', sans-serif;
+    font-weight: 400;
+    font-size: 10px;
+    color: gray;
+}
+.register {
+    display: block;
+    position: absolute;
+    width: 272px;
+    text-align: center;
+    text-decoration-line: none;
+    color: #F7584A;
+    margin-top: 275px;
+    font-family: 'Exo', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+}
+.extProfile {
+    display: none;
+    background-image: url('./images/backProfile.png');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 272px 340px;
+    height: 340px;
+    width: 272px;
+}
+.settings {
+    margin-left: 245px;
+    margin-top: 20px;
+    position: absolute;
+    cursor: pointer;
+}
+
+.userPhoto {
+    display: block;
+    margin-top: 65px;
+    position: absolute;
+}
+.userImg {
+    margin-left: 108px;
+    border-radius: 62px;
+    height: 62px;
+    width: 62px;
+}
+.username {
+    display: block;
+    position: absolute;
+    width: 272px;
+    text-align: center;
+    font-family: 'Exo', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    margin-top: 135px;
+    text-decoration-line: none;
+}
+.switch {
+    height: 29px;
+    width: 40px;
+    position: absolute;
+    margin-left: 181px;
+    margin-top: 258px;
+    cursor: pointer;
+}
+.switchBox {
+    height: 20px;
+    width: 36px;
+    background-color: #aefab891;
+    border-radius: 20px;
+    position: absolute;
+    box-shadow: inset 0 1px 0 0 rgba(128, 128, 128, 0.315);
+}
+.switchBall {
+    height: 24px;
+    width: 24px;
+    background-color: rgb(64, 189, 147);
+    border-radius: 24px;
+    margin-top: -2px;
+    margin-left: 14px;
+    position: absolute;
+    box-shadow: 0 1px 0 0 rgba(128, 128, 128, 0.61);
+}

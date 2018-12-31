@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="style.css" type="text/css">
+
+    <title>FrontPage Things</title>
+    <script type="text/javascript" src="tweenMax.js"></script>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="popup.js"></script>
+    <script type="text/javascript" src="script.js"></script>
+    <script type="text/javascript" src="assets/js/firebase-app.js"></script>
+    <script type="text/javascript" src="assets/js/firebase-db.js"></script>
+    <script type="text/javascript" src="assets/js/firebase-auth.js"></script>
+</head>
+
+<body>
+
+    <div class="loading">
+            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-ripple"><circle cx="50" cy="50" r="18.155" fill="none" ng-attr-stroke="{{config.c1}}" ng-attr-stroke-width="{{config.width}}" stroke="#3be8b0" stroke-width="2"><animate attributeName="r" calcMode="spline" values="0;40" keyTimes="0;1" dur="0.9" keySplines="0 0.2 0.8 1" begin="-0.45s" repeatCount="indefinite"></animate><animate attributeName="opacity" calcMode="spline" values="1;0" keyTimes="0;1" dur="0.9" keySplines="0.2 0 0.8 1" begin="-0.45s" repeatCount="indefinite"></animate></circle><circle cx="50" cy="50" r="36.303" fill="none" ng-attr-stroke="{{config.c2}}" ng-attr-stroke-width="{{config.width}}" stroke="#1aafd0" stroke-width="2"><animate attributeName="r" calcMode="spline" values="0;40" keyTimes="0;1" dur="0.9" keySplines="0 0.2 0.8 1" begin="0s" repeatCount="indefinite"></animate><animate attributeName="opacity" calcMode="spline" values="1;0" keyTimes="0;1" dur="0.9" keySplines="0.2 0 0.8 1" begin="0s" repeatCount="indefinite"></animate></circle></svg>
+    </div>
+    <div class="home">
+        <div class="logo">
+            <img src="./images/gengooLogo.png">
+        </div>
+        <input type="email" class="email" placeholder="E-mail">
+        <input type="password" class="password" placeholder="Password">
+        <input type="button" class="signInBtn" value="SIGN IN">
+        <span>OR</span>
+        <a class="register" href="https://www.gengoo.net">REGISTER</a>
+    </div>
+    <div class="extProfile">
+        <img src="./images/settings.png" class="settings" />
+        <a class="userPhoto" href="https://www.gengoo.net/profile"><img src="./images/unknownProfile.jpg" class="userImg" /></a>
+        <a class="username" href="https://www.gengoo.net/profile"></a>
+        <div class="switch">
+            <div class="switchBox"></div>
+            <div class="switchBall"></div>
+        </div>
+    </div>
+</body>
+
+</html>

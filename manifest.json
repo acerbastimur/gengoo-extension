@@ -1,0 +1,25 @@
+{
+    "manifest_version": 2,
+    "version": "1.0",
+    "name": "Gengoo",
+    "description": "The most popular movies and TV shows in your   default tab. Includes ratings, summaries and the ability to watch trailers.",
+    "icons": {
+        "128": "icon.png"
+    },
+    "browser_action": {
+        "default_icon": "icon.png",
+        "default_popup": "popup.html ",
+        "default_title": "FrontPageStyle"
+    },
+    "content_scripts": [{
+        "matches": ["https://www.youtube.com/*"],
+        "js": ["jquery.js", "youtube.js", "tweenMax.js"],
+        "css": ["youtube.css"]
+    }],
+    "permissions": [
+        "tabs",
+        "https://www.youtube.com/*",
+        "storage"
+
+    ]
+}
