@@ -5,15 +5,42 @@ var request = {
 
 }
 
+chrome.storage.local.get("uid", function (result) {
+    console.log('%c Value currently is ', "color:red;background-color:yellow");
+    console.log(result.uid);
+    initialize(result.uid);
 
-if (window.location.href.includes("https://www.youtube.com/watch")) {
+});
+
+
+
+
+function initialize(uid) { // INITIALIZE GENGOO
+
+    if (window.location.href.includes("https://www.youtube.com/watch")) {
+        if (uid != null) {
             console.log("%c GENGOO IS OPENED !", 'background: #222;  bakcground-color: green')
-             main()
+            main()
+        } else {
+            setTimeout(() => {
+                var makeBlock = document.querySelector(".captions-text")
+                if (makeBlock != null) {
+                    makeBlock.style.display = "block"
+                }
+                setInterval(() => {
+                    var makeBlock2 = document.querySelector(".captions-text")
+                    if (makeBlock2 != null) {
+                        makeBlock2.style.display = "block"
+                    }
+                }, 100);
+
+            }, 1000);
+
         }
+    }
+}
 
 
-
-        
 
 function main() {
     if (document.querySelector(".ytp-subtitles-button").style.display != 'none') {
@@ -97,7 +124,7 @@ function main() {
 
 
 
-function ifUrlChange() {  // REFRESH IF URL CHANGES :(
+function ifUrlChange() { // REFRESH IF URL CHANGES :(
     console.log(window.location.href)
     var oldUrl = window.location.href;
     setInterval(() => {
@@ -111,7 +138,7 @@ function ifUrlChange() {  // REFRESH IF URL CHANGES :(
 }
 
 
- 
+
 
 function popUp(e, translatedText, translatedText1, translatedText2) {
     removeChosenTrans();

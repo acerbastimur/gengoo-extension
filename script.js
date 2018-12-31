@@ -1,23 +1,35 @@
 var uid = '';
 
- console.log("TEST")
+console.log("TEST")
 
 $(document).ready(function () {
     firebaseInitialization();
-    checkAuthState();        
+    checkAuthState();
     validationUI();
-    logOut()
+ 
     $('.signInBtn').on("click", () => {
         var email = $('.email').val();
         var password = $('.password').val();
         signIn(email, password);
         checkAuthState();
     })
+
 })
 
 
 function logOut() {
     firebase.auth().signOut();
+    chrome.storage.local.set({
+        'uid': null
+    });
+    reloadPage();
+}
+
+
+function reloadPage() {
+    chrome.tabs.getSelected(null, function (tab) {
+        chrome.tabs.reload(tab.id);
+    });
 }
 
 function checkAuthState() {
@@ -33,10 +45,19 @@ function checkAuthState() {
             var providerData = user.providerData;
             signInUi();
             getUserInfoFromDb(user.uid);
-            console.log("logged in as",uid)
+            console.log("logged in as", uid)
+            chrome.storage.local.set({
+                'uid': uid
+            });
 
             // ...
         } else {
+            console.log("non auth");
+            chrome.storage.local.set({
+                'uid': null
+            });
+
+
             $('.loading').hide()
         }
     });
@@ -49,11 +70,9 @@ function getUserInfoFromDb(uid) {
         $('.loading').hide();
         let youtubeState = data.child("youtube").val();
         switchListener(youtubeState);
-
-        console.log(youtubeState)
         if (youtubeState == false) {
             switchToFalse();
-            
+
         }
         willSbtlOpn("youtube", youtubeState)
         let name = data.child("name").val();
@@ -68,7 +87,9 @@ function getUserInfoFromDb(uid) {
 function signIn(email, password) {
     firebase.auth().signInWithEmailAndPassword(email, password).then(data => {
             console.log("SIGNED IN ! = ", data);
+            reloadPage();
             signInUi();
+
         })
         .catch(function (error) {
             // Handle Errors here.
@@ -107,7 +128,7 @@ function firebaseInitialization() {
         messagingSenderId: "1049883744272"
     };
     firebase.initializeApp(config);
- 
+
 }
 
 
@@ -297,7 +318,7 @@ function willSbtlOpn(platform, flag) {
             currentWindow: true
         }, function (tabs) {
             chrome.tabs.sendMessage(tabs[0].id, {
-                 state: !check
+                state: !check
             })
         });
 
