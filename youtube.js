@@ -144,7 +144,6 @@ function popUp(e, translatedText, translatedText1, translatedText2) {
     removeChosenTrans();
     appendTrans();
     var choosenTrans = $('.choosenTrans')
-    choosenTrans.addClass("selected");
     var clickedElement = $(e.target);
     document.querySelectorAll("#gengooWord").forEach(element => { // TO REMOVE BACKGROUND IF THERE IS ON ANOTHER ONE
         $(element).css({
@@ -213,7 +212,7 @@ function appendGengooSubtitle() {
 function waitForClick() {
     $('.gengooSubtitle').click((e) => {
         do { // DO WHILE BECAUSE WE WANT IT TO START ONCE
-            console.log(e);
+            // console.log(e);
             translate(e, e.target.innerText); // FIRST TRANSLATE WORD THAN INITIALIZE FOR UI
 
         } while (false)
@@ -337,7 +336,6 @@ function hoverSubtitle() {
     $('.gengooSubtitle').mouseleave(function () {
         setTimeout(() => {
             if (isVideoPlaying() === false) {
-                console.log(66);
                 $(".ytp-play-button").click();
                 var tl = new TimelineMax()
                 tl
@@ -346,12 +344,11 @@ function hoverSubtitle() {
                         opacity: 0,
                         delay: 0.2
                     })
-                    .to($(".selected"), 0.2, {
-                        backgroundColor: "red",
-                        ease: Power3.easeOut,
-                        delay: 0.2
-                    })
-                $(".selected").removeClass()
+
+                for (let index = 0; index < document.querySelectorAll('#gengooWord').length; index++) {
+                    document.querySelectorAll('#gengooWord')[index].style.backgroundColor = "transparent";
+                }
+
             }
         }, 50);
 
