@@ -393,7 +393,34 @@ function getVideoEnd() {
             setTimeout(() => {
                 $(".ytp-upnext-cancel-button").click()
                 console.log(CollectedWords)
-                // YOU NEED TO CALL THE POPUP UI FUNCTION
+                setInterval(()=>{
+                    $('.ytp-videowall-still-image').hide()
+                    $('.ytp-suggestion-set').hide()
+                    $('.ytp-endscreen-next').hide()
+                    $('.ytp-endscreen-previous').hide()
+                },150)
+                $('.ytp-endscreen-content').append("<div class='createCard'>"+
+                "<div class='createTitle'>VIDEO NAME</div>" +
+                "<div class='carts'></div>" +
+                "<div class='words'></div>" +
+                "<div class='send'>CREATE</div>"
+                +"</div>")
+                let videoHeight = $('.ytp-endscreen-content').height()
+                let videoWidth = $('.ytp-endscreen-content').width()
+                $('.createCard').css({
+                    'height' : videoHeight*0.8,
+                    'width': videoWidth*0.5,
+                    'margin-left': videoWidth*0.25
+                })
+                $(window).resize(function(){
+                    let videoHeight = $('.ytp-endscreen-content').height()
+                    let videoWidth = $('.ytp-endscreen-content').width()
+                    $('.createCard').css({
+                        'height' : videoHeight*0.8,
+                        'width': videoWidth*0.5,
+                        'margin-left': videoWidth*0.25
+                    })
+                })
             }, 300);
         }
     }

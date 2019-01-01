@@ -59,3 +59,45 @@
 .translatedText {
     border-bottom: 1px solid rgb(93, 93, 93);
 }
+
+.createCard {
+    margin-top: 40px;
+    border: 1px solid #c3c3c33f;
+    background-color: rgba(83, 83, 83, 0.315);
+    border-radius: 3px;
+}
+
+.createTitle {
+    margin-top: 20px;
+    margin-left: 10%;
+    padding: 5px;
+    width: 80%;
+    border-radius: 6px;
+    text-align: center;
+    background-color: rgb(22, 144, 48);
+    box-shadow: 0 3px 0 rgb(14, 94, 31);
+    color: white;
+}
+
+.carts, .words{
+    margin-top: 20px;
+    border-top: 1px solid #c3c3c33f;
+    border-bottom: 1px solid #c3c3c33f;
+    background-color: rgba(148, 148, 148, 0.315);
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+.send {
+    margin-top: 20px;
+    padding: 5px;
+    border-radius: 6px;
+    width: 80%;
+    margin-left: 10%;
+    text-align: center;
+    color: white;
+    background-color: #ff0000;
+    box-shadow: 0 3px 0 #b90000;
+}
