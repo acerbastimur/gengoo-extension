@@ -5,10 +5,14 @@ var request = {
 
 }
 
+
+let CollectedWords = [];
+
 chrome.storage.local.get("uid", function (result) {
     console.log('%c Value currently is ', "color:red;background-color:yellow");
     console.log(result.uid);
     initialize(result.uid);
+
 
 });
 
@@ -21,6 +25,7 @@ function initialize(uid) { // INITIALIZE GENGOO
         if (uid != null) {
             console.log("%c GENGOO IS OPENED !", 'background: #222;  bakcground-color: green')
             main()
+            firebaseInitialization()
         } else {
             setTimeout(() => {
                 var makeBlock = document.querySelector(".captions-text")
@@ -46,6 +51,7 @@ function main() {
     if (document.querySelector(".ytp-subtitles-button").style.display != 'none') {
         console.log(document.querySelector(".ytp-subtitles-button").style.display)
         hideYoutubeSubtitleIcon(); // TO HIDE YOUTUBE'S SUBTITLE ICON
+        getVideoEnd();
         $(".ytp-right-controls").prepend("<img class='gengooSubmit gengooSubtitleClosed' src='https://firebasestorage.googleapis.com/v0/b/gengoo2192.appspot.com/o/icon.png?alt=media&token=397f0445-7336-4b93-a3b5-06e6f10a49a2' />")
 
         var listenerScrnBtn = false
@@ -105,7 +111,7 @@ function main() {
 
                     waitForClick();
 
-                    hoverSubtitle()
+                    hoverSubtitle();
 
                 })
 
@@ -134,7 +140,6 @@ function ifUrlChange() { // REFRESH IF URL CHANGES :(
             window.location.reload()
         }
     }, 300)
-
 }
 
 
@@ -144,7 +149,6 @@ function popUp(e, translatedText, translatedText1, translatedText2) {
     removeChosenTrans();
     appendTrans();
     var choosenTrans = $('.choosenTrans')
-    choosenTrans.addClass("selected");
     var clickedElement = $(e.target);
     document.querySelectorAll("#gengooWord").forEach(element => { // TO REMOVE BACKGROUND IF THERE IS ON ANOTHER ONE
         $(element).css({
@@ -213,7 +217,7 @@ function appendGengooSubtitle() {
 function waitForClick() {
     $('.gengooSubtitle').click((e) => {
         do { // DO WHILE BECAUSE WE WANT IT TO START ONCE
-            console.log(e);
+            // console.log(e);
             translate(e, e.target.innerText); // FIRST TRANSLATE WORD THAN INITIALIZE FOR UI
 
         } while (false)
@@ -254,13 +258,17 @@ function pauseVideoSequence(time) {
 }
 
 function isVideoPlaying() {
-    if ($(".ytp-play-button").attr('aria-label').indexOf('Duraklat') != -1 || $(".ytp-play-button").attr('aria-label').indexOf('Pause') != -1) { // PLAYING //MUST BE INDEXOF
-        return true
+    var attr = $(".ytp-play-button").attr('aria-label')
+    if (attr) {
+        if ($(".ytp-play-button").attr('aria-label').indexOf('Duraklat') != -1 || $(".ytp-play-button").attr('aria-label').indexOf('Pause') != -1) { // PLAYING //MUST BE INDEXOF
+            return true
 
-    } else if ($(".ytp-play-button").attr('aria-label').indexOf('Oynat') != -1 || $(".ytp-play-button").attr('aria-label').indexOf('Play') != -1) { // PAUSED //MUST BE INDEXOF
-        return false
+        } else if ($(".ytp-play-button").attr('aria-label').indexOf('Oynat') != -1 || $(".ytp-play-button").attr('aria-label').indexOf('Play') != -1) { // PAUSED //MUST BE INDEXOF
+            return false
 
+        }
     }
+
 }
 
 function toggleYoutubeSubtitle() {
@@ -300,7 +308,7 @@ async function translate(e, word) {
     if (e.target.id == "gengooWord") {
         var request = new XMLHttpRequest();
         var words = [];
-        request.open('GET', 'https://us-central1-gengoo2192.cloudfunctions.net/translateApi/en/tr/' + word, true);
+        request.open('GET', 'https://us-central1-gengoo2192.cloudfunctions.net/translateApi/tr/en/' + word, true);
         request.onload = function () {
 
             // Begin accessing JSON data here
@@ -308,7 +316,7 @@ async function translate(e, word) {
 
             if (request.status >= 200 && request.status < 400) {
                 popUp(e, data[0], data[1], data[2]); // NOW JUST FIRST TRANSLATION IS SENT TO POPUP
-
+                saveWords(word, data[0])
             } else {
                 console.log('error');
             }
@@ -337,7 +345,6 @@ function hoverSubtitle() {
     $('.gengooSubtitle').mouseleave(function () {
         setTimeout(() => {
             if (isVideoPlaying() === false) {
-                console.log(66);
                 $(".ytp-play-button").click();
                 var tl = new TimelineMax()
                 tl
@@ -346,12 +353,11 @@ function hoverSubtitle() {
                         opacity: 0,
                         delay: 0.2
                     })
-                    .to($(".selected"), 0.2, {
-                        backgroundColor: "red",
-                        ease: Power3.easeOut,
-                        delay: 0.2
-                    })
-                $(".selected").removeClass()
+
+                for (let index = 0; index < document.querySelectorAll('#gengooWord').length; index++) {
+                    document.querySelectorAll('#gengooWord')[index].style.backgroundColor = "transparent";
+                }
+
             }
         }, 50);
 
@@ -365,4 +371,43 @@ function hoverSubtitle() {
         }
 
     });
+}
+
+function saveWords(word, translation) {
+    CollectedWords.push({
+        word,
+        translation
+    });
+}
+
+function getVideoEnd() {
+    let endScreen = document.querySelector(".videowall-endscreen");
+    if (endScreen) {
+        if (document.querySelector(".videowall-endscreen").style.display == "none") {
+            console.log("%c NOT END", 'color:purple;backgorund-color:green')
+            setTimeout(() => {
+                getVideoEnd();
+            }, 300)
+        } else {
+            console.log("%c END", 'color:blue;backgorund-color:pink');
+            setTimeout(() => {
+                $(".ytp-upnext-cancel-button").click()
+                console.log(CollectedWords)
+                // YOU NEED TO CALL THE POPUP UI FUNCTION
+            }, 300);
+        }
+    }
+}
+
+
+function firebaseInitialization() {
+    var config = {
+        apiKey: "AIzaSyBD9lKavl8YYX1mH0JQbMWEHRC-JE7COtk",
+        authDomain: "gengoo2192.firebaseapp.com",
+        databaseURL: "https://gengoo2192.firebaseio.com",
+        projectId: "gengoo2192",
+        storageBucket: "gengoo2192.appspot.com",
+        messagingSenderId: "1049883744272"
+    };
+    firebase.initializeApp(config);
 }

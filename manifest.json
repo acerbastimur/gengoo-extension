@@ -13,7 +13,7 @@
     },
     "content_scripts": [{
         "matches": ["https://www.youtube.com/*"],
-        "js": ["jquery.js", "youtube.js", "tweenMax.js"],
+        "js": ["jquery.js", "youtube.js", "tweenMax.js","assets/js/firebase-app.js","assets/js/firebase-db.js"],
         "css": ["youtube.css"]
     }],
     "permissions": [

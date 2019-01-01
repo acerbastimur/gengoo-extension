@@ -1,12 +1,11 @@
 var uid = '';
 
-console.log("TEST")
+ 
 
 $(document).ready(function () {
     firebaseInitialization();
     checkAuthState();
     validationUI();
- 
     $('.signInBtn').on("click", () => {
         var email = $('.email').val();
         var password = $('.password').val();
