@@ -375,10 +375,17 @@ function hoverSubtitle() {
 }
 
 function saveWords(word, translation) {
-    CollectedWords.push({
-        word,
-        translation
-    });
+    let checkIfThereIs = CollectedWords.filter(data => {
+        return data.word == word
+    })
+
+    if (checkIfThereIs.length == 0) {
+        CollectedWords.push({
+            word,
+            translation
+        });
+    }
+
 }
 
 function getVideoEnd() {
@@ -433,8 +440,7 @@ function addToCardUI() {
         'width': videoWidth * 0.5
     })
 
-    $('.send').click(()=>{
-        console.log("CLİCKEDDDDD",CollectedWords); 
+    $('.send').click(() => {
         addToCard(
             document.querySelector("#container > h1 > yt-formatted-string").innerText,
             CollectedWords
@@ -456,12 +462,21 @@ function addToCardUI() {
     })
 }
 
-function addToCard(cardName,words){
-    firebase.database().ref("cards/"+ uid).push({
-        cardName:cardName,
+function addToCard(cardName, words) {
+    firebase.database().ref("cards/" + uid).push({
+        cardName: cardName,
         learningRate: 0,
-        wordCounter:words.length,
-        words:words
+        wordCounter: words.length,
+        words: words
+    }).then(() => {
+        savedToCardsUI();
+    })
+}
+
+function savedToCardsUI() {
+    TweenMax.to(".createCard", 0.6, {
+        transformOrigin: "50% 50%",
+        scale: 0
     })
 }
 
