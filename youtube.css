@@ -101,3 +101,8 @@
     background-color: #ff0000;
     box-shadow: 0 3px 0 #b90000;
 }
+
+.wordsContainer {
+    height: ;
+    overflow-y: scroll;
+}
