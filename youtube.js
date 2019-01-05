@@ -7,10 +7,11 @@ var request = {
 
 
 let CollectedWords = [];
-
+let uid;
 chrome.storage.local.get("uid", function (result) {
     console.log('%c Value currently is ', "color:red;background-color:yellow");
     console.log(result.uid);
+    uid = result.uid;
     initialize(result.uid);
 
 
@@ -374,10 +375,17 @@ function hoverSubtitle() {
 }
 
 function saveWords(word, translation) {
-    CollectedWords.push({
-        word,
-        translation
-    });
+    let checkIfThereIs = CollectedWords.filter(data => {
+        return data.word == word
+    })
+
+    if (checkIfThereIs.length == 0) {
+        CollectedWords.push({
+            word,
+            translation
+        });
+    }
+
 }
 
 function getVideoEnd() {
@@ -391,41 +399,86 @@ function getVideoEnd() {
         } else {
             console.log("%c END", 'color:blue;backgorund-color:pink');
             setTimeout(() => {
-                $(".ytp-upnext-cancel-button").click()
-                console.log(CollectedWords)
-                setInterval(()=>{
-                    $('.ytp-videowall-still-image').hide()
-                    $('.ytp-suggestion-set').hide()
-                    $('.ytp-endscreen-next').hide()
-                    $('.ytp-endscreen-previous').hide()
-                },150)
-                $('.ytp-endscreen-content').append("<div class='createCard'>"+
-                "<div class='createTitle'>VIDEO NAME</div>" +
-                "<div class='carts'></div>" +
-                "<div class='words'></div>" +
-                "<div class='send'>CREATE</div>"
-                +"</div>")
-                let videoHeight = $('.ytp-endscreen-content').height()
-                let videoWidth = $('.ytp-endscreen-content').width()
-                $('.createCard').css({
-                    'height' : videoHeight*0.8,
-                    'width': videoWidth*0.5,
-                    'margin-left': videoWidth*0.25
-                })
-                $(window).resize(function(){
-                    let videoHeight = $('.ytp-endscreen-content').height()
-                    let videoWidth = $('.ytp-endscreen-content').width()
-                    $('.createCard').css({
-                        'height' : videoHeight*0.8,
-                        'width': videoWidth*0.5,
-                        'margin-left': videoWidth*0.25
-                    })
-                })
+                addToCardUI();
             }, 300);
         }
     }
 }
 
+
+function addToCardUI() {
+
+    $(".ytp-upnext-cancel-button").click()
+    console.log(CollectedWords)
+    setInterval(() => {
+        $('.ytp-videowall-still-image').hide()
+        $('.ytp-suggestion-set').hide()
+        $('.ytp-endscreen-next').hide()
+        $('.ytp-endscreen-previous').hide()
+        $('.gengooSubtitle').hide()
+
+    }, 150)
+    $('.ytp-endscreen-content').append("<div class='createCard'>" +
+        "<div class='createTitle'>" + document.querySelector("#container > h1 > yt-formatted-string").innerText + "</div>")
+    $('.createCard').append("<div class='wordsContainer'></div> ")
+
+    for (let index = 0; index < CollectedWords.length; index++) {
+        $('.wordsContainer').append("<div class='words'>" + CollectedWords[index].word + " " + CollectedWords[index].translation + "</div>")
+
+    }
+
+    $('.createCard').append("<div class='send'>Create Card</div></div>")
+    let videoHeight = $('.ytp-endscreen-content').height()
+    let videoWidth = $('.ytp-endscreen-content').width()
+    $('.createCard').css({
+        'height': videoHeight * 0.8,
+        'width': videoWidth * 0.5,
+        'margin-left': videoWidth * 0.25
+    })
+    $('.wordsContainer').css({
+        'height': videoHeight * 0.6,
+        'width': videoWidth * 0.5
+    })
+
+    $('.send').click(() => {
+        addToCard(
+            document.querySelector("#container > h1 > yt-formatted-string").innerText,
+            CollectedWords
+        )
+    })
+
+    $(window).resize(function () {
+        let videoHeight = $('.ytp-endscreen-content').height()
+        let videoWidth = $('.ytp-endscreen-content').width()
+        $('.createCard').css({
+            'height': videoHeight * 0.8,
+            'width': videoWidth * 0.5,
+            'margin-left': videoWidth * 0.25
+        })
+        $('.wordsContainer').css({
+            'height': videoHeight * 0.6,
+            'width': videoWidth * 0.5
+        })
+    })
+}
+
+function addToCard(cardName, words) {
+    firebase.database().ref("cards/" + uid).push({
+        cardName: cardName,
+        learningRate: 0,
+        wordCounter: words.length,
+        words: words
+    }).then(() => {
+        savedToCardsUI();
+    })
+}
+
+function savedToCardsUI() {
+    TweenMax.to(".createCard", 0.6, {
+        transformOrigin: "50% 50%",
+        scale: 0
+    })
+}
 
 function firebaseInitialization() {
     var config = {
