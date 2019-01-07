@@ -168,9 +168,14 @@ function popUp(e, translatedText, translatedText1, translatedText2) {
 
     }
     var itemTop = e.currentTarget.offsetTop - choosenTrans.innerHeight();
-    var itemLeft = e.toElement.offsetLeft;
-    var itemWidth = e.target.offsetWidth // the width of the choosenTrans div element
-
+    var clickedWith = clickedElement.width();
+    var translateWith = choosenTrans.outerWidth(true);
+    var clickedLeft = e.target.offsetLeft;
+    if (clickedWith >= translateWith ) {
+        var itemLeft = clickedLeft + (clickedWith - translateWith)/2
+    } else {
+        var itemLeft = clickedLeft - (translateWith - clickedWith)/2
+    }
     choosenTrans.offset({ // POSITION OF THE SPAN OF TRANSLATED WORD
         top: itemTop,
         left: itemLeft
@@ -180,11 +185,11 @@ function popUp(e, translatedText, translatedText1, translatedText2) {
         .set(clickedElement, {
             "borderRadius": "4px 4px 4px 4px"
         })
-        .to(clickedElement, 0.2, {
-            backgroundColor: "#5C9531",
-            ease: Power3.easeOut
-        })
-
+        .fromTo(clickedElement, 0.4, {
+            backgroundColor: "none"
+        },{backgroundColor: "#5C9531",
+            ease: Power3.easeOut})
+hoverSubtitle(clickedElement)
 
 }
 
@@ -340,27 +345,34 @@ async function isSubtitleShowing(selector) {
 }
 
 
-function hoverSubtitle() {
-
-
+function hoverSubtitle(clickedElement) {
+    var popupListener = false
+    $('.choosenTrans').mouseover(function(){
+        popupListener = true
+    })
+    $('.choosenTrans').mouseleave(function(){
+        popupListener = false
+    })
     $('.gengooSubtitle').mouseleave(function () {
         setTimeout(() => {
-            if (isVideoPlaying() === false) {
+            if (isVideoPlaying() === false && isVideoPlaying()=== false) {
                 $(".ytp-play-button").click();
                 var tl = new TimelineMax()
                 tl
                     .to('.choosenTrans', 0.15, {
                         y: 20,
                         opacity: 0,
-                        delay: 0.2
+                        delay: 0.5
                     })
-
+                tl.to(clickedElement), 0.15, {
+                    backgorundColor: 'none',
+                    delay: 0.5
+                }
                 for (let index = 0; index < document.querySelectorAll('#gengooWord').length; index++) {
                     document.querySelectorAll('#gengooWord')[index].style.backgroundColor = "transparent";
                 }
-
             }
-        }, 50);
+        }, 500);
 
     })
 
