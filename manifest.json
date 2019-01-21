@@ -15,10 +15,16 @@
         "matches": ["https://www.youtube.com/*"],
         "js": ["jquery.js", "youtube.js", "tweenMax.js","assets/js/firebase-app.js","assets/js/firebase-db.js"],
         "css": ["youtube.css"]
+    },
+    {
+        "matches": ["https://www.netflix.com/*"],
+        "js": ["jquery.js", "youtube.js", "tweenMax.js","assets/js/firebase-app.js","assets/js/firebase-db.js"],
+        "css": ["youtube.css"]
     }],
     "permissions": [
         "tabs",
         "https://www.youtube.com/*",
+        "https://www.netflix.com/*",
         "storage",
         "identity"
 
