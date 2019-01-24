@@ -6,6 +6,18 @@ $(document).ready(function () {
     firebaseInitialization();
     checkAuthState();
     validationUI();
+    openSetting();
+    logOut();
+    document.getElementById('email').addEventListener('keyup', function(event){
+        if ( event.keyCode === 13 ) {
+            document.getElementById('signInBtn').click()
+        }
+    })
+    document.getElementById('password').addEventListener('keyup', function(event){
+        if ( event.keyCode === 13 ) {
+            document.getElementById('signInBtn').click()
+        }
+    })
     $('.signInBtn').on("click", () => {
         var email = $('.email').val();
         var password = $('.password').val();
@@ -17,13 +29,60 @@ $(document).ready(function () {
 
 
 function logOut() {
-    firebase.auth().signOut();
+    $('.logOut').click(function(){
+        firebase.auth().signOut();
     chrome.storage.local.set({
         'uid': null
     });
     reloadPage();
+    })
 }
-
+function openSetting() {
+    var listener = true
+    $('.settings').click(function(){
+        if ( listener ) {
+            var tl = new TimelineMax()
+        tl
+            .set('.userDetail', {
+                display: 'block'
+            })
+            .to('.userDetail', 0.2, {
+                y: 30,
+                opacity: 1,
+                delay: 0.1
+            })
+        tl
+            .set('.logOut', {
+                display: 'block'
+            })
+            .to('.logOut', 0.2, {
+                y: 65,
+                opacity: 1,
+            })
+        listener = false
+        } else {
+            var tl = new TimelineMax()
+        tl
+            .to('.userDetail', 0.2, {
+                y: 20,
+                opacity: 0,
+                delay: 0.1
+            })
+            .set('.userDetail', {
+                display: 'none'
+            })
+        tl
+            .to('.logOut', 0.2, {
+                y: 20,
+                opacity: 0,
+            })
+            .set('.logOut', {
+                display: 'none'
+            })
+        listener = true
+        }
+    });
+}
 
 function reloadPage() {
     chrome.tabs.getSelected(null, function (tab) {
@@ -48,8 +107,6 @@ function checkAuthState() {
             chrome.storage.local.set({
                 'uid': uid
             });
-
-            // ...
         } else {
             console.log("non auth");
             chrome.storage.local.set({
@@ -75,7 +132,9 @@ function getUserInfoFromDb(uid) {
         }
         willSbtlOpn("youtube", youtubeState)
         let name = data.child("name").val();
+        let profilePhoto = data.child("pp").val();
         $('.username').text(name)
+        $('.userImg').attr('src', profilePhoto)
     })
 
 }

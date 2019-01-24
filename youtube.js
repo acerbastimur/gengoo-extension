@@ -314,7 +314,7 @@ async function translate(e, word) {
     if (e.target.id == "gengooWord") {
         var request = new XMLHttpRequest();
         var words = [];
-        request.open('GET', 'https://us-central1-gengoo2192.cloudfunctions.net/translateApi/fr/en/' + word, true);
+        request.open('GET', 'https://us-central1-gengoo2192.cloudfunctions.net/translateApi/en/tr/' + word, true);
         request.onload = function () {
 
             // Begin accessing JSON data here

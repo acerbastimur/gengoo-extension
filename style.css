@@ -147,7 +147,26 @@ span {
     position: absolute;
     cursor: pointer;
 }
-
+.userDetail {
+    margin-left: 243px;
+    margin-top: 20px;
+    position: absolute;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    opacity: 0;
+    display: none;
+}
+.logOut {
+    margin-left: 246px;
+    margin-top: 20px;
+    width: 18px;
+    position: absolute;
+    cursor: pointer;
+    opacity: 0;
+    display: none;
+}
 .userPhoto {
     display: block;
     margin-top: 65px;
