@@ -25,8 +25,18 @@ $(document).ready(function () {
         checkAuthState();
     })
 
+    $('.userDetail').on('click', function () {
+        navigateUrl("https://gengoo.net/contain/profile")
+    })
+    $(".userPhoto").on('click', function(){
+        navigateUrl("https://gengoo.net/contain/profile")
+
+    })
 })
 
+function navigateUrl(e) {
+    chrome.tabs.create({url:e})
+}
 
 function logOut() {
     $('.logOut').click(function(){
@@ -97,7 +107,6 @@ function checkAuthState() {
             var displayName = user.displayName;
             var email = user.email;
             var emailVerified = user.emailVerified;
-            var photoURL = user.photoURL;
             var isAnonymous = user.isAnonymous;
             uid = user.uid;
             var providerData = user.providerData;
@@ -114,7 +123,7 @@ function checkAuthState() {
             });
 
 
-            $('.loading').hide()
+            
         }
     });
 }
@@ -135,6 +144,7 @@ function getUserInfoFromDb(uid) {
         let profilePhoto = data.child("pp").val();
         $('.username').text(name)
         $('.userImg').attr('src', profilePhoto)
+        $('.loading').hide()
     })
 
 }
@@ -167,14 +177,7 @@ function signIn(email, password) {
 
 
 
-function openUrl() {
-    $('body').on('click', 'a', function () {
-        chrome.tabs.create({
-            url: $(this).attr('href')
-        });
-        return false;
-    });
-}
+
 
 function firebaseInitialization() {
     var config = {
