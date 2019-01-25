@@ -118,6 +118,7 @@ function checkAuthState() {
             });
         } else {
             console.log("non auth");
+            $('.loading').hide();
             chrome.storage.local.set({
                 'uid': null
             });
@@ -132,7 +133,6 @@ function checkAuthState() {
 function getUserInfoFromDb(uid) {
     console.log(uid)
     firebase.database().ref('/users').child(uid).once('value', data => {
-        $('.loading').hide();
         let youtubeState = data.child("youtube").val();
         switchListener(youtubeState);
         if (youtubeState == false) {
