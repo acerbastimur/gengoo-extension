@@ -47,28 +47,28 @@ function main() {
     hideYoutubeSubtitleIcon(); // TO HIDE YOUTUBE'S SUBTITLE ICON
     getVideoEnd();
     $(".ytp-right-controls").prepend(
-      "<img class='gengooSubmit gengooSubtitleClosed' src='https://firebasestorage.googleapis.com/v0/b/gengoo2192.appspot.com/o/icon.png?alt=media&token=397f0445-7336-4b93-a3b5-06e6f10a49a2' />"
+      "<img class='gengooSubmit gengooSubtitleClosed' src='https://firebasestorage.googleapis.com/v0/b/gengoo2192.appspot.com/o/icon.png?alt=media&token=0350a4bd-126f-4688-8739-cd4e2ff73e31' />"
     );
 
     var listenerScrnBtn = false;
 
     if ($(".ytp-fullscreen-button").attr("title") == "Full screen") {
       // TO SET SUBTITLE POSITION
-      $(".gengooSubmit").height("54px"); // DEFAULT VALUE IN EVERY SCREEN
+      $(".gengooSubmit").height("52px"); // DEFAULT VALUE IN EVERY SCREEN
       listenerScrnBtn = false;
     } else {
-      $(".gengooSubmit").height("36px"); // DEFAULT VALUE IN EVERY SCREEN
+      $(".gengooSubmit").height("34px"); // DEFAULT VALUE IN EVERY SCREEN
       listenerScrnBtn = true;
     }
 
     $(".ytp-fullscreen-button").on("click", () => {
       // TO SET SUBTITLE POSITION WHILE CLICKING TO THE SCREEN BUTTON
       if (listenerScrnBtn == false) {
-        $(".gengooSubmit").height("36px"); // DEFAULT VALUE IN EVERY SCREEN
+        $(".gengooSubmit").height("34px"); // DEFAULT VALUE IN EVERY SCREEN
         listenerScrnBtn = true;
       } else {
         listenerScrnBtn = false;
-        $(".gengooSubmit").height("54px"); // DEFAULT VALUE IN EVERY SCREEN
+        $(".gengooSubmit").height("5px"); // DEFAULT VALUE IN EVERY SCREEN
       }
     });
 
@@ -295,7 +295,7 @@ function hideYoutubeSubtitle() {
     $(".captions-text").css({
       visibility: "hidden"
     });
-  }, 1000);
+  }, 300);
 }
 
 function removeGengooSubtitle() {
