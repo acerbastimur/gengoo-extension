@@ -201,6 +201,9 @@ function appendGengooSubtitle() {
     $(".html5-video-player").append("<div class='gengooSubtitle'> </div>");
     closePopupIfResize();
   }
+  setInterval(() => {
+    isYoutubeSettingsOpen()
+  }, 300);
 }
 
 function waitForClick() {
@@ -344,6 +347,7 @@ async function isSubtitleShowing(selector) {
 }
 
 function hoverSubtitle(clickedElement) {
+ 
   var popupListener = false;
   $(".choosenTrans").mouseover(function() {
     popupListener = true;
@@ -353,10 +357,9 @@ function hoverSubtitle(clickedElement) {
   });
   $(".gengooSubtitle").mouseleave(function() {
     setTimeout(() => {
-      if (isVideoPlaying() === false && isVideoPlaying() === false) {
+      if (isVideoPlaying() === false && isVideoPlaying() === false ) {
         $(".ytp-play-button").click();
-        var tl = new TimelineMax();
-        tl.to(".choosenTrans", 0.15, {
+         TweenMax.to(".choosenTrans", 0.15, {
           y: 20,
           opacity: 0,
           delay: 0.5
@@ -378,7 +381,7 @@ function hoverSubtitle(clickedElement) {
           ].style.backgroundColor = "transparent";
         }
       }
-    }, 500);
+    }, 800);
   });
 
   $(".gengooSubtitle, .choosenTrans").mouseover(function() {
@@ -518,4 +521,18 @@ function firebaseInitialization() {
     messagingSenderId: "1049883744272"
   };
   firebase.initializeApp(config);
+}
+
+function isYoutubeSettingsOpen() {
+  let settings = document.querySelector(".ytp-settings-button");
+
+  if (settings) {
+    let isOpen = settings.hasAttribute("aria-expanded");
+    if (isOpen) {
+      $(".gengooSubtitle").hide();
+      
+    } else {
+      $(".gengooSubtitle").show();
+    }
+  }
 }
