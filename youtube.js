@@ -308,15 +308,20 @@ async function translate(e, word) {
     var words = [];
     request.open(
       "GET",
-      "https://us-central1-gengoo2192.cloudfunctions.net/translateApi/en/tr/" +
+      "https://us-central1-gengoo2192.cloudfunctions.net/gengooTranslate/en/tr/" +
         word,
       true
     );
     request.onload = function() {
       // Begin accessing JSON data here
+
       var data = JSON.parse(this.response); // Begin accessing JSON data here
 
       if (request.status >= 200 && request.status < 400) {
+        // console.log(e, data[0], data[1], data[2]);
+        console.log(this.response);
+        console.log(data);
+
         popUp(e, data[0], data[1], data[2]); // NOW JUST FIRST TRANSLATION IS SENT TO POPUP
         saveWords(word, data[0]);
       } else {
@@ -356,12 +361,13 @@ function hoverSubtitle(clickedElement) {
           opacity: 0,
           delay: 0.5
         });
-        tl.to(clickedElement),
-          0.15,
-          {
+        if (clickedElement) {
+          tl.to(clickedElement, 0.15, {
             backgorundColor: "none",
             delay: 0.5
-          };
+          });
+        }
+
         for (
           let index = 0;
           index < document.querySelectorAll("#gengooWord").length;
@@ -401,12 +407,12 @@ function getVideoEnd() {
     if (
       document.querySelector(".videowall-endscreen").style.display == "none"
     ) {
-      console.log("%c NOT END", "color:purple;backgorund-color:green");
+      // console.log("%c NOT END", "color:purple;backgorund-color:green");
       setTimeout(() => {
         getVideoEnd();
       }, 300);
     } else {
-      console.log("%c END", "color:blue;backgorund-color:pink");
+      // console.log("%c END", "color:blue;backgorund-color:pink");
       setTimeout(() => {
         if (CollectedWords.length != 0) {
           addToCardUI();

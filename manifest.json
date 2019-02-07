@@ -25,10 +25,11 @@
         "tabs",
         "https://www.youtube.com/*",
         "https://www.netflix.com/watch/*",
+        "https://us-central1-gengoo2192.cloudfunctions.net/*",
         "storage",
         "identity"
 
     ],
-    "content_security_policy":"script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'"
+    "content_security_policy":"script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://us-central1-gengoo2192.cloudfunctions.net/* https://www.googleapis.com; object-src 'self'"
      
  }
