@@ -311,7 +311,7 @@ async function translate(e, word) {
     var words = [];
     request.open(
       "GET",
-      "https://us-central1-gengoo2192.cloudfunctions.net/gengooTranslate/en/tr/" +
+      "https://us-central1-gengoo2192.cloudfunctions.net/gengooTranslate/es/tr/" +
         word,
       true
     );
