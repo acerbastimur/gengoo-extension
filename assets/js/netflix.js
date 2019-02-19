@@ -8,11 +8,11 @@ main();
 
 function main() {
   setInterval(() => {
-    find();
     $(".player-timedtext-text-container").css("z-index", "10000");
   }, 150);
-
-  isHover();
+ 
+  
+  //isHover();
   waitForClick();
   
 }
@@ -45,9 +45,8 @@ function playVideo() {
 }
 
 function isHover() {
-  let element = $(".player-timedtext"); // player-timedtext && player-timedtext-text-container
-  let element1 = $(".player-timedtext"); // player-timedtext && player-timedtext-text-container
- 
+  let element = $(".player-timedtext-text-container"); // player-timedtext && player-timedtext-text-container
+  
    
   if (element.length == 0) {
     setTimeout(() => {
@@ -55,9 +54,10 @@ function isHover() {
       return isHover();
     }, 100);
   }
-  console.log(element,element1);
+  console.log(element);
 
-  element.mouseenter(function(e) {
+  /* element.mouseenter(function(e) {
+    alert()
     pauseVideo("pause");
     setInterval(() => {
       if ($(".gengooWord").length == 0) {
@@ -71,7 +71,7 @@ function isHover() {
         }
       }
     }, 100);
-  });
+  }); */
 
   element.mouseleave(function(e) {
     playVideo();
@@ -81,7 +81,7 @@ function isHover() {
 function waitForClick() {
   console.log("waiting for click");
 
-  $("*").click(function(e){
-   // console.log(e.target.class)
+  $("*").mouseenter(function(e){
+    //console.log(e)
     })
 }
