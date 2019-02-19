@@ -12,9 +12,8 @@ function main() {
   }, 150);
  
   
-  //isHover();
-  waitForClick();
-  
+  isHover();
+   
 }
 
 /* function find() {
@@ -51,11 +50,50 @@ function isHover() {
   if (element.length == 0) {
     setTimeout(() => {
       element = null; // GARBAGE COLLECTOR <3
+      console.log("-")
       return isHover();
     }, 100);
-  }
-  console.log(element);
+  } else {
+    console.log("else ye girdi");
+    
+    $('*').mouseover(function(e){
+      var par = $(e.target)
+      // console.log(par);
+      
+       if(par.parent()[0].className == "player-timedtext-text-container") {
+        pauseVideo();
+           if ($(".gengooWord").length == 0) {
+            try {
+              new SplitText(".player-timedtext-text-container", {
+                type: "words",
+                wordsClass: "gengooWord"
+              });
+            } catch (err) {
+              console.log("Nothing found to split");
+            }
+          }
+         console.log(par);
+        
+         
+      } 
 
+     })
+
+     $('*').mouseleave(function(e){
+      var par = $(e.target)
+       console.log("leave",par.parent()[0].firstChild.className);
+      
+       if(par.parent()[0].firstChild.className == "gengooWord") { // YOU ARE HERE
+        playVideo()          
+         
+      } 
+
+     })
+
+  }
+  //console.log(element);
+
+  
   /* element.mouseenter(function(e) {
     alert()
     pauseVideo("pause");
@@ -73,15 +111,6 @@ function isHover() {
     }, 100);
   }); */
 
-  element.mouseleave(function(e) {
-    playVideo();
-  });
+  
 }
-
-function waitForClick() {
-  console.log("waiting for click");
-
-  $("*").mouseenter(function(e){
-    //console.log(e)
-    })
-}
+  
