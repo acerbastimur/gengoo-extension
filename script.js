@@ -32,6 +32,9 @@ $(document).ready(function () {
         navigateUrl("https://gengoo.net/contain/profile")
 
     })
+    $('.suggestButton').on('click', function() {
+        navigateUrl('https://gengoo.net/contain/contact')
+    })
 })
 
 function navigateUrl(e) {
