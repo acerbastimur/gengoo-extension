@@ -4,12 +4,16 @@ var request = {
   state: false
 };
 
+let _global = {
+  wordLeft: 0
+};
 let CollectedWords = [];
 let uid;
 chrome.storage.local.get("uid", function(result) {
   console.log("%c Value currently is ", "color:red;background-color:yellow");
   console.log(result.uid);
   uid = result.uid;
+
   initialize(result.uid);
 });
 
@@ -18,10 +22,6 @@ function initialize(uid) {
 
   if (window.location.href.includes("https://www.youtube.com/watch")) {
     if (uid != null) {
-      console.log(
-        "%c GENGOO IS OPENED !",
-        "background: #222;  bakcground-color: green"
-      );
       main();
       firebaseInitialization();
     } else {
@@ -202,7 +202,7 @@ function appendGengooSubtitle() {
     closePopupIfResize();
   }
   setInterval(() => {
-    isYoutubeSettingsOpen()
+    isYoutubeSettingsOpen();
   }, 300);
 }
 
@@ -211,10 +211,15 @@ function waitForClick() {
     do {
       // DO WHILE BECAUSE WE WANT IT TO START ONCE
       // console.log(e);
-      translate(e, e.target.innerText); // FIRST TRANSLATE WORD THAN INITIALIZE FOR UI
+      if (_global.wordLeft > 0) {
+        translate(e, e.target.innerText); // FIRST TRANSLATE WORD THAN INITIALIZE FOR UI
+        _global.wordLeft = _global.wordLeft -1
+        wordLeftUpdater(_global.wordLeft)
+      }
     } while (false);
   });
 }
+
 
 function textPusher() {
   var oldCaptions = "";
@@ -311,7 +316,7 @@ async function translate(e, word) {
     var words = [];
     request.open(
       "GET",
-      "https://us-central1-gengoo2192.cloudfunctions.net/gengooTranslate/es/tr/" +
+      "https://us-central1-gengoo2192.cloudfunctions.net/gengooTranslate/en/tr/" +
         word,
       true
     );
@@ -347,7 +352,6 @@ async function isSubtitleShowing(selector) {
 }
 
 function hoverSubtitle(clickedElement) {
- 
   var popupListener = false;
   $(".choosenTrans").mouseover(function() {
     popupListener = true;
@@ -357,9 +361,9 @@ function hoverSubtitle(clickedElement) {
   });
   $(".gengooSubtitle").mouseleave(function() {
     setTimeout(() => {
-      if (isVideoPlaying() === false && isVideoPlaying() === false ) {
+      if (isVideoPlaying() === false && isVideoPlaying() === false) {
         $(".ytp-play-button").click();
-         TweenMax.to(".choosenTrans", 0.15, {
+        TweenMax.to(".choosenTrans", 0.15, {
           y: 20,
           opacity: 0,
           delay: 0.5
@@ -521,8 +525,26 @@ function firebaseInitialization() {
     messagingSenderId: "1049883744272"
   };
   firebase.initializeApp(config);
+  getWordLeft();
 }
 
+function getWordLeft() {
+  firebase
+    .database()
+    .ref("users/" + uid)
+    .once("value", snapshot => {
+      _global.wordLeft = snapshot.child("wordLeft").val();
+      console.log("WORD LEFT IS ", _global.wordLeft);
+    });
+}
+function wordLeftUpdater(count) {
+  firebase
+    .database()
+    .ref("users/" + uid)
+    .update( {
+     wordLeft : count
+    });
+}
 function isYoutubeSettingsOpen() {
   let settings = document.querySelector(".ytp-settings-button");
 
@@ -530,7 +552,6 @@ function isYoutubeSettingsOpen() {
     let isOpen = settings.hasAttribute("aria-expanded");
     if (isOpen) {
       $(".gengooSubtitle").hide();
-      
     } else {
       $(".gengooSubtitle").show();
     }
