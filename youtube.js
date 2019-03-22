@@ -52,23 +52,23 @@ function main() {
 
     var listenerScrnBtn = false;
 
-    if ($(".ytp-fullscreen-button").attr("title") == "Full screen") {
+    if ($(".ytp-fullscreen-button").attr("title").indexOf("Full screen") == -1) {
       // TO SET SUBTITLE POSITION
-      $(".gengooSubmit").height("52px"); // DEFAULT VALUE IN EVERY SCREEN
+      $(".gengooSubmit").css({'margin-bottom':'5px', 'height':'45px'});// DEFAULT VALUE IN EVERY SCREEN
       listenerScrnBtn = false;
     } else {
-      $(".gengooSubmit").height("34px"); // DEFAULT VALUE IN EVERY SCREEN
+      $(".gengooSubmit").css({'margin-bottom':'5px', 'height':'25px'});// DEFAULT VALUE IN EVERY SCREEN
       listenerScrnBtn = true;
     }
 
     $(".ytp-fullscreen-button").on("click", () => {
       // TO SET SUBTITLE POSITION WHILE CLICKING TO THE SCREEN BUTTON
       if (listenerScrnBtn == false) {
-        $(".gengooSubmit").height("34px"); // DEFAULT VALUE IN EVERY SCREEN
+        $(".gengooSubmit").css({'margin-bottom':'5px', 'height':'25px'});// DEFAULT VALUE IN EVERY SCREEN
         listenerScrnBtn = true;
       } else {
         listenerScrnBtn = false;
-        $(".gengooSubmit").height("5px"); // DEFAULT VALUE IN EVERY SCREEN
+        $(".gengooSubmit").css({'margin-bottom':'5px', 'height':'45px'});// DEFAULT VALUE IN EVERY SCREEN
       }
     });
 
