@@ -3,23 +3,30 @@
  }
 
  .translateArea {
-     color: aliceblue;
+     color: rgb(255, 255, 255);
      font-size: 36px;
      position: fixed;
      top: 0;
      z-index: 99999!important;
-     background-color: rgba(214, 213, 213, 0.521);
+     background-color: rgba(22, 149, 54, 0.856);
      padding: 10px;
      border-radius: 6px;
      display: none;
+     font-size: 18px;
+     font-family: 'Exo', sans-serif;
+     line-height: normal;
+     font-weight: normal;
+     font-style: italic;
+     text-align: center;
+     font-family: Netflix Sans,Helvetica Nueue,Helvetica,Arial,sans-serif;
+     font-weight: bolder;
  }
  @keyframes highlight {
     0% {
         color: #3ac219;
      }
     100% {
-        color: none; 
-
+        color: white; 
     }
 }
 

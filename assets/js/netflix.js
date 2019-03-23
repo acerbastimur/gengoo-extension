@@ -193,21 +193,41 @@ function hideTranslateArea() {
   translateArea.css("display", "none");
   highlightRemover();
 }
-
+let timer;
 const popupResponsive = e => {
   
-  const left = $(e.target).offset().left;
+  const left = $(e.target).offset();
   const top = $(e.target).offset().top - 20;
   const width = $(e.target).width();
   const height = $('.translateArea').height();
-  console.log(height);
   
   const translated_word_width = $('.translateArea').width();
   if ( width >= translated_word_width ) {
-    const calculation = left + ( translated_word_width - width ) / 2;
-    $('.translateArea').stop().animate({marginLeft:calculation,marginTop:top - height},300)
+    const calculation = left.left - ( translated_word_width - width ) / 2;
+    cancelHiding();
+    $('.translateArea').show();
+    $('.translateArea').css({'margin-top':top- height})
+    $('.translateArea').stop().animate({marginLeft:calculation},300)
+    hidePopUp();
   } else {
-    const calculation = left - ( translated_word_width - width ) / 2;
-    $('.translateArea').stop().animate({marginLeft:calculation,marginTop:top - height},300)
+    cancelHiding();
+    $('.translateArea').show();
+    const calculation = left.left + ( translated_word_width - width ) / 2;
+    $('.translateArea').css({'margin-top':top - height})
+    $('.translateArea').stop().animate({marginLeft:calculation},300)
+    hidePopUp();
   }
+};
+
+function hidePopUp() {
+  timer = setTimeout(function(){
+    $('.translateArea').hide();
+    if ( !isPlaying() ) {
+      playVideo();
+    }
+  },2000);
+};
+
+function cancelHiding() {
+  clearTimeout(timer);
 };
