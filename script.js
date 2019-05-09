@@ -35,6 +35,9 @@ $(document).ready(function () {
     $('.suggestButton').on('click', function() {
         navigateUrl('https://gengoo.net/contain/contact')
     })
+    $('.register').on('click', function() {
+        navigateUrl('https://gengoo.net/home')
+    })
 })
 
 function navigateUrl(e) {
@@ -50,6 +53,7 @@ function logOut() {
     reloadPage();
     })
 }
+
 function openSetting() {
     var listener = true
     $('.settings').click(function(){
@@ -132,7 +136,6 @@ function checkAuthState() {
     });
 }
 
-
 function getUserInfoFromDb(uid) {
     console.log(uid)
     firebase.database().ref('/users').child(uid).once('value', data => {
@@ -151,9 +154,6 @@ function getUserInfoFromDb(uid) {
     })
 
 }
-
-
-
 
 function signIn(email, password) {
     firebase.auth().signInWithEmailAndPassword(email, password).then(data => {
@@ -176,12 +176,6 @@ function signIn(email, password) {
 
 }
 
-
-
-
-
-
-
 function firebaseInitialization() {
     var config = {
         apiKey: "AIzaSyBD9lKavl8YYX1mH0JQbMWEHRC-JE7COtk",
@@ -194,8 +188,6 @@ function firebaseInitialization() {
     firebase.initializeApp(config);
 
 }
-
-
 
 function validationUI() {
     const email = $('.email')
@@ -360,9 +352,6 @@ function switchListener(firstState) {
         }
     })
 }
-
-
-
 
 function willSbtlOpn(platform, flag) {
     var check = flag;
