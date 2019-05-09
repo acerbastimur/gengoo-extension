@@ -10,8 +10,6 @@ let _global = {
 let CollectedWords = [];
 let uid;
 chrome.storage.local.get("uid", function(result) {
-  console.log("%c Value currently is ", "color:red;background-color:yellow");
-  console.log(result.uid);
   uid = result.uid;
 
   initialize(result.uid);
@@ -42,8 +40,8 @@ function initialize(uid) {
 }
 
 function main() {
+  checkSubtitleVisibility();
   if (document.querySelector(".ytp-subtitles-button").style.display != "none") {
-    console.log(document.querySelector(".ytp-subtitles-button").style.display);
     hideYoutubeSubtitleIcon(); // TO HIDE YOUTUBE'S SUBTITLE ICON
     getVideoEnd();
     $('.ytp-settings-button').click()
@@ -121,7 +119,11 @@ function main() {
     });
   }
 }
-
+function checkSubtitleVisibility() {
+  if ( document.querySelector('.ytp-subtitles-button').getAttribute('aria-pressed') ) {
+    $('.ytp-subtitles-button').click();
+  }
+}
 function ifUrlChange() {
   // REFRESH IF URL CHANGES :(
   console.log(window.location.href);
@@ -395,7 +397,7 @@ function hideYoutubeSubtitle() {
     $(".captions-text").css({
       visibility: "hidden"
     });
-  }, 300);
+  }, 50);
 }
 
 function removeGengooSubtitle() {
@@ -539,7 +541,6 @@ function getVideoEnd() {
 
 function addToCardUI() {
   $(".ytp-upnext-cancel-button").click();
-  console.log(CollectedWords);
   setInterval(() => {
     $(".ytp-videowall-still-image").hide();
     $(".ytp-suggestion-set").hide();
@@ -602,11 +603,6 @@ function addToCardUI() {
 }
 
 function addToCard(cardName, words) {
-  for ( let i=0; i<words.length; i++ ) {
-    if ( words[i]['translation'] == undefined ) {
-      words.slice(0, i).concat(words.slice(i+2, words.length));
-    }
-  }
   firebase
     .database()
     .ref("cards/" + uid)
@@ -618,6 +614,14 @@ function addToCard(cardName, words) {
     })
     .then(() => {
       savedToCardsUI();
+    }).then(()=>{
+      var autoPlay = document.querySelectorAll('.ytd-compact-autoplay-renderer')[3].getAttribute('aria-pressed');
+      if ( autoPlay ) {
+        var newVideo = document.querySelectorAll("#thumbnail")[0].getAttribute('href');
+        setTimeout(()=>{
+          window.open("https://www.youtube.com/"+newVideo, "_self");
+        },600)
+      }
     });
 }
 
