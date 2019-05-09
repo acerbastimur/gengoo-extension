@@ -46,29 +46,41 @@ function main() {
     console.log(document.querySelector(".ytp-subtitles-button").style.display);
     hideYoutubeSubtitleIcon(); // TO HIDE YOUTUBE'S SUBTITLE ICON
     getVideoEnd();
+    $('.ytp-settings-button').click()
+    $('.ytp-settings-button').click()
     $(".ytp-right-controls").prepend(
       "<img class='gengooSubmit gengooSubtitleClosed' src='https://firebasestorage.googleapis.com/v0/b/gengoo2192.appspot.com/o/icon.png?alt=media&token=0350a4bd-126f-4688-8739-cd4e2ff73e31' />"
     );
 
     var listenerScrnBtn = false;
 
-    if ($(".ytp-fullscreen-button").attr("title").indexOf("Full screen") == -1) {
-      // TO SET SUBTITLE POSITION
-      $(".gengooSubmit").css({'margin-bottom':'5px', 'height':'45px'});// DEFAULT VALUE IN EVERY SCREEN
-      listenerScrnBtn = false;
-    } else {
-      $(".gengooSubmit").css({'margin-bottom':'5px', 'height':'25px'});// DEFAULT VALUE IN EVERY SCREEN
-      listenerScrnBtn = true;
-    }
+    setInterval(()=>{
+      if ($(".ytp-fullscreen-button").attr("title").indexOf("Full screen" || "Tam ekran") == -1) {
+        // TO SET SUBTITLE POSITION
+        $(".gengooSubmit").css({'margin-bottom':'5px', 'height':'45px'});// DEFAULT VALUE IN EVERY SCREEN
+        listenerScrnBtn = false;
+        subtitleVerticalAlignment();
+        subtitleHorizontalAlignment();
+      } else {
+        $(".gengooSubmit").css({'margin-bottom':'5px', 'height':'25px'});// DEFAULT VALUE IN EVERY SCREEN
+        listenerScrnBtn = true;
+        subtitleVerticalAlignment();
+        subtitleHorizontalAlignment();
+      }
+    },100)
 
     $(".ytp-fullscreen-button").on("click", () => {
       // TO SET SUBTITLE POSITION WHILE CLICKING TO THE SCREEN BUTTON
       if (listenerScrnBtn == false) {
         $(".gengooSubmit").css({'margin-bottom':'5px', 'height':'25px'});// DEFAULT VALUE IN EVERY SCREEN
+        subtitleVerticalAlignment();
+        subtitleHorizontalAlignment();
         listenerScrnBtn = true;
       } else {
         listenerScrnBtn = false;
         $(".gengooSubmit").css({'margin-bottom':'5px', 'height':'45px'});// DEFAULT VALUE IN EVERY SCREEN
+        subtitleVerticalAlignment();
+        subtitleHorizontalAlignment();
       }
     });
 
@@ -84,7 +96,6 @@ function main() {
 
       if (request.state === true) {
         $(".gengooSubmit").removeClass("gengooSubtitleClosed"); // TO HIGHLIGHT IT
-
         if ($(".ytp-subtitles-button").attr("aria-pressed") == "false") {
           // IF THERE IS NO SUBTITLE THAN OPEN IT
           toggleYoutubeSubtitle();
@@ -101,7 +112,6 @@ function main() {
 
           waitForClick();
 
-          hoverSubtitle();
         });
       } else if (request.state == false) {
         $(".gengooSubmit").addClass("gengooSubtitleClosed"); // TO UNHIGHLIGHT SUBMIT BUTTON
@@ -130,10 +140,11 @@ function popUp(e, translatedText, translatedText1, translatedText2) {
   appendTrans();
   var choosenTrans = $(".choosenTrans");
   var clickedElement = $(e.target);
-  document.querySelectorAll("#gengooWord").forEach(element => {
+  var clickedListener = true;
+  document.querySelectorAll(".gengooWord").forEach(element => {
     // TO REMOVE BACKGROUND IF THERE IS ON ANOTHER ONE
     $(element).css({
-      "background-color": "transparent"
+      "color": "white"
     });
   });
   /* PUSH DOM A CONTAINER FOR TRANSLATE OBJECTS */
@@ -153,8 +164,8 @@ function popUp(e, translatedText, translatedText1, translatedText2) {
   }
   var itemTop = e.currentTarget.offsetTop - choosenTrans.innerHeight();
   var clickedWith = clickedElement.width();
-  var translateWith = choosenTrans.outerWidth(true);
-  var clickedLeft = e.target.offsetLeft;
+  var translateWith = choosenTrans.outerWidth( true );
+  var clickedLeft = e.target.offsetLeft + ($('.html5-main-video').width() - $('.'+e.target.offsetParent.className).width())/2;
   if (clickedWith >= translateWith) {
     var itemLeft = clickedLeft + (clickedWith - translateWith) / 2;
   } else {
@@ -168,17 +179,15 @@ function popUp(e, translatedText, translatedText1, translatedText2) {
     })
     .fadeIn(400);
   var tl = new TimelineMax();
-  tl.set(clickedElement, {
-    borderRadius: "4px 4px 4px 4px"
-  }).fromTo(
+  tl.fromTo(
     clickedElement,
     0.4,
     {
-      backgroundColor: "none"
+      color: "white"
     },
-    { backgroundColor: "#5C9531", ease: Power3.easeOut }
+    { color: "#5C9531", ease: Power3.easeOut }
   );
-  hoverSubtitle(clickedElement);
+  subtitleMouseLeave(clickedListener);
 }
 
 function closePopupIfResize() {
@@ -193,7 +202,6 @@ function removeChosenTrans() {
 
 function appendTrans() {
   $(".html5-video-player").append("<div class='choosenTrans'> </div>");
-  hoverSubtitle();
 }
 
 function appendGengooSubtitle() {
@@ -207,10 +215,9 @@ function appendGengooSubtitle() {
 }
 
 function waitForClick() {
-  $(".gengooSubtitle").click(e => {
+  $(".gengooSubtitle").stop().click(e => {
     do {
       // DO WHILE BECAUSE WE WANT IT TO START ONCE
-      // console.log(e);
       if (_global.wordLeft > 0) {
         translate(e, e.target.innerText); // FIRST TRANSLATE WORD THAN INITIALIZE FOR UI
         _global.wordLeft = _global.wordLeft -1
@@ -220,31 +227,127 @@ function waitForClick() {
   });
 }
 
-
 function textPusher() {
-  var oldCaptions = "";
+  
+  var autoTranslateControl = document.querySelector("#ytp-id-18 > div > div > div:nth-child(4) > div.ytp-menuitem-content").textContent;
+  if ( autoTranslateControl.indexOf('auto-generated') != -1) {
+    autoTranslatedSubtitle();
+  } else {
+    noneAutoTranslatedSubtitle();
+  }
+}
 
+function autoTranslatedSubtitle() {
+  var oldCaption = "";  // Old caption of the pushed line
+  var newCaption = "";  // New caption of the pushed line
   setInterval(() => {
-    if ($(".captions-text").text() != oldCaptions) {
-      // IF THERE IS A CHANGE IN YOUTUBE'S SUBTITLES
-      removeChosenTrans(); // REMOVE TRANS OBJ IF THERE IS
-      $(".gengooSubtitle").empty(); // MAKE GENGOO SUB. BLANK
-      $(".captions-text")
-        .text()
-        .replace("?", "? ")
-        .replace(".", ". ")
-        .replace("!", "! ")
-        .replace(/\xA0/g, " ")
-        .split(" ")
-        .forEach(element => {
-          //SPLIT IT AS WORDS
-          $(".gengooSubtitle").append(
-            "<span id='gengooWord'>" + element + " </span>"
-          ); // MAKE EVERY WORD A SPAN
-          oldCaptions = $(".captions-text").text(); // EQUAL THE TEXTS
-        });
+    newCaption = $('.caption-visual-line').last().text(); // Last line of the pushed caption
+    if ( newCaption.length < oldCaption.length ) {  // If the youtube push new caption line
+      createNewLine();
+      waitForClick();
+    } else if ( newCaption != oldCaption ) {
+      $('.gengooSubtitle').empty();
+      parser();
+      subtitleVerticalAlignment();
     }
-  }, 100);
+    oldCaption = $('.caption-visual-line').last().text(); // EQUAL THE TEXTS
+}, 100);
+}
+
+function noneAutoTranslatedSubtitle() {
+  var oldCaption = "";  // Old caption of the pushed line
+  var newCaption = "";  // New caption of the pushed line
+  setInterval(() => {
+    newCaption = $('.caption-visual-line').last().text(); // Last line of the pushed caption
+    if ( newCaption != oldCaption ) {  // If the youtube push new caption line
+      createNewLine();
+      parser(); // parse the new capiton as spaces
+      subtitleVerticalAlignment();
+      subtitleHorizontalAlignment();
+      waitForClick();
+    }
+    oldCaption = $('.caption-visual-line').last().text(); // EQUAL THE TEXTS
+}, 100);
+}
+
+function createNewLine() {
+  clickedListener = false;
+  $('.topGengooSubtitle').remove();  // remove the top line of the caption
+  $('.gengooSubtitle').addClass('topGengooSubtitle'); // create a new top caption class name
+  $('.topGengooSubtitle').removeClass('gengooSubtitle');  // remove the old caption class name
+  $(".html5-video-player").append("<div class='gengooSubtitle'> </div>"); // create a new caption to push from youtube
+  subtitleMouseOver();
+  subtitleMouseLeave(clickedListener);
+}
+
+function parser() {
+  $('.caption-visual-line').last()
+  .text()
+  .replace("?", "? ")
+  .replace(".", ". ")
+  .replace("!", "! ")
+  .replace(/\xA0/g, " ")
+  .split(" ")
+  .forEach(element => {
+    //SPLIT IT AS WORDS
+    $(".gengooSubtitle").append(
+      "<span class='gengooWord'>" + element + " </span>"
+    ); // MAKE EVERY WORD A SPAN
+  });
+}
+
+function subtitleVerticalAlignment() {
+  var subtitleH = $('.gengooSubtitle').height();
+  var videoSceenH = $('.html5-video-player').height();
+  var youtubeTimeLineH = $('.ytp-chrome-bottom').height();
+  var bottomSubAlignmentCalc = videoSceenH - youtubeTimeLineH - 55;
+  var topSubAlignmentCalc = bottomSubAlignmentCalc - subtitleH - 5;
+  $('.gengooSubtitle').css({'margin-top': bottomSubAlignmentCalc});
+  $('.topGengooSubtitle').css({'margin-top': topSubAlignmentCalc});
+  $(window).resize(function(){
+    var subtitleH = $('.gengooSubtitle').height();
+    var videoSceenH = $('.html5-video-player').height();
+    var youtubeTimeLineH = $('.ytp-chrome-bottom').height();
+    var bottomSubAlignmentCalc = videoSceenH - youtubeTimeLineH - 40;
+    var topSubAlignmentCalc = bottomSubAlignmentCalc - subtitleH - 5;
+    $('.gengooSubtitle').css({'margin-top': bottomSubAlignmentCalc});
+    $('.topGengooSubtitle').css({'margin-top': topSubAlignmentCalc});
+  });
+}
+
+function subtitleHorizontalAlignment() {
+  var videoScreenW = $('.html5-main-video').width();
+  var bottomGengooSubtitleW = $('.gengooSubtitle').width();
+  var topGengooSubtitileW = $('.topGengooSubtitle').width();
+  var calcBottomSubtitleMargin = ( videoScreenW - bottomGengooSubtitleW ) / 2;
+  var calcTopSubtitleMargin = ( videoScreenW - topGengooSubtitileW ) / 2;
+  $('.gengooSubtitle').css({
+    'text-align':'center',
+    'margin-left': calcBottomSubtitleMargin,
+    'margin-left': calcBottomSubtitleMargin
+  });
+  $('.topGengooSubtitle').css({
+    'text-align':'center',
+    'margin-left': calcTopSubtitleMargin,
+    'margin-left': calcTopSubtitleMargin
+  });
+  $(window).resize(function(){
+    var videoScreenW = $('.html5-main-video').width();
+    var bottomGengooSubtitleW = $('.gengooSubtitle').width();
+    var topGengooSubtitileW = $('.topGengooSubtitle').width();
+    var calcBottomSubtitleMargin = ( videoScreenW - bottomGengooSubtitleW ) / 2;
+    var calcTopSubtitleMargin = ( videoScreenW - topGengooSubtitileW ) / 2;
+    $('.gengooSubtitle').css({
+      'text-align':'center',
+      'margin-left': calcBottomSubtitleMargin,
+      'margin-left': calcBottomSubtitleMargin
+    });
+    $('.topGengooSubtitle').css({
+      'text-align':'center',
+      'margin-left': calcTopSubtitleMargin,
+      'margin-left': calcTopSubtitleMargin
+    });
+  })
 }
 
 function pauseVideoSequence(time) {
@@ -264,25 +367,14 @@ function pauseVideoSequence(time) {
 function isVideoPlaying() {
   var attr = $(".ytp-play-button").attr("aria-label");
   if (attr) {
-    if (
-      $(".ytp-play-button")
-        .attr("aria-label")
-        .indexOf("Duraklat") != -1 ||
-      $(".ytp-play-button")
-        .attr("aria-label")
-        .indexOf("Pause") != -1
-    ) {
-      // PLAYING //MUST BE INDEXOF
+    if ( $(".ytp-play-button").attr("aria-label").indexOf("Duraklat") != -1 ||
+      $(".ytp-play-button").attr("aria-label").indexOf("Pause") != -1 ) {
+      // PLAYING
       return true;
     } else if (
-      $(".ytp-play-button")
-        .attr("aria-label")
-        .indexOf("Oynat") != -1 ||
-      $(".ytp-play-button")
-        .attr("aria-label")
-        .indexOf("Play") != -1
-    ) {
-      // PAUSED //MUST BE INDEXOF
+      $(".ytp-play-button").attr("aria-label").indexOf("Oynat") != -1 ||
+      $(".ytp-play-button").attr("aria-label").indexOf("Play") != -1 ) {
+      // PAUSED
       return false;
     }
   }
@@ -307,11 +399,12 @@ function hideYoutubeSubtitle() {
 }
 
 function removeGengooSubtitle() {
-  $(".gengooSubtitle").remove();
+  $(".gengooSubtitle, .topGengooSubtitle").remove();
 }
 
 async function translate(e, word) {
-  if (e.target.id == "gengooWord") {
+
+  if (e.target.className == "gengooWord") {
     var request = new XMLHttpRequest();
     var words = [];
     request.open(
@@ -324,14 +417,12 @@ async function translate(e, word) {
       // Begin accessing JSON data here
 
       var data = JSON.parse(this.response); // Begin accessing JSON data here
-
       if (request.status >= 200 && request.status < 400) {
         // console.log(e, data[0], data[1], data[2]);
-        console.log(this.response);
-        console.log(data);
 
         popUp(e, data[0], data[1], data[2]); // NOW JUST FIRST TRANSLATION IS SENT TO POPUP
         saveWords(word, data[0]);
+        
       } else {
         console.log("error");
       }
@@ -351,60 +442,76 @@ async function isSubtitleShowing(selector) {
   });
 }
 
-function hoverSubtitle(clickedElement) {
-  var popupListener = false;
-  $(".choosenTrans").mouseover(function() {
-    popupListener = true;
-  });
-  $(".choosenTrans").mouseleave(function() {
-    popupListener = false;
-  });
-  $(".gengooSubtitle").mouseleave(function() {
-    setTimeout(() => {
-      if (isVideoPlaying() === false && isVideoPlaying() === false) {
-        $(".ytp-play-button").click();
-        TweenMax.to(".choosenTrans", 0.15, {
-          y: 20,
-          opacity: 0,
-          delay: 0.5
+function subtitleMouseLeave(clickedListener) {
+  $(".gengooSubtitle, .topGengooSubtitle, .choosenTrans").mouseleave(()=>{
+    if ( isVideoPlaying() === false && !clickedListener ) {
+      $(".ytp-play-button").click();
+      $(".choosenTrans").stop().fadeOut(400)
+      document.querySelectorAll(".gengooWord").forEach(element => {
+        // TO REMOVE BACKGROUND IF THERE IS ON ANOTHER ONE
+        $(element).css({
+          "color": "white"
         });
-        if (clickedElement) {
-          tl.to(clickedElement, 0.15, {
-            backgorundColor: "none",
-            delay: 0.5
+      });
+    } else if ( isVideoPlaying() === false && clickedListener ) {
+      setTimeout(()=>{
+        $(".ytp-play-button").click();
+        $(".choosenTrans").stop().fadeIn(400)
+        document.querySelectorAll(".gengooWord").forEach(element => {
+          // TO REMOVE BACKGROUND IF THERE IS ON ANOTHER ONE
+          $(element).css({
+            "color": "white"
           });
-        }
-
-        for (
-          let index = 0;
-          index < document.querySelectorAll("#gengooWord").length;
-          index++
-        ) {
-          document.querySelectorAll("#gengooWord")[
-            index
-          ].style.backgroundColor = "transparent";
-        }
-      }
-    }, 800);
+        });
+        clickedListener = false;
+        var newTime = setTimeout(()=>{
+          $(".ytp-play-button").click();
+          $(".choosenTrans").stop().fadeOut(400)
+          document.querySelectorAll(".gengooWord").forEach(element => {
+            // TO REMOVE BACKGROUND IF THERE IS ON ANOTHER ONE
+            $(element).css({
+              "color": "white"
+            });
+          });
+        },1000)
+        $('.gengooSubtitle, .topGengooSubtitle, .choosenTrans').mouseover(()=>{
+          clearTimeout(newTime);
+        })
+      },0)
+    }
   });
 
-  $(".gengooSubtitle, .choosenTrans").mouseover(function() {
+}
+
+function subtitleMouseOver() {
+  $(".gengooSubtitle, .topGengooSubtitle").mouseover(()=>{
     if (isVideoPlaying() === true) {
       $(".ytp-play-button").click();
     }
   });
+  $(".gengooSubtitle, .topGengooSubtitle").mouseover((e)=>{
+    document.querySelectorAll(".gengooWord").forEach(element => {
+      // TO REMOVE BACKGROUND IF THERE IS ON ANOTHER ONE
+      $(element).css({
+        "color": "white"
+      });
+    });
+    $(e.target).css({'color':'skyblue'});
+  })
 }
 
 function saveWords(word, translation) {
-  let checkIfThereIs = CollectedWords.filter(data => {
-    return data.word == word;
-  });
-
-  if (checkIfThereIs.length == 0) {
-    CollectedWords.push({
-      word,
-      translation
+  if ( translation != undefined ) {
+    let checkIfThereIs = CollectedWords.filter(data => {
+      return data.word == word;
     });
+  
+    if (checkIfThereIs.length == 0) {
+      CollectedWords.push({
+        word,
+        translation
+      });
+    }
   }
 }
 
@@ -425,6 +532,7 @@ function getVideoEnd() {
           addToCardUI();
         }
       }, 300);
+      $('.topGengooSubtitle, .gengooSubtitle').remove();
     }
   }
 }
@@ -494,6 +602,11 @@ function addToCardUI() {
 }
 
 function addToCard(cardName, words) {
+  for ( let i=0; i<words.length; i++ ) {
+    if ( words[i]['translation'] == undefined ) {
+      words.slice(0, i).concat(words.slice(i+2, words.length));
+    }
+  }
   firebase
     .database()
     .ref("cards/" + uid)
