@@ -57,13 +57,9 @@ function main() {
         // TO SET SUBTITLE POSITION
         $(".gengooSubmit").css({'margin-bottom':'5px', 'height':'45px'});// DEFAULT VALUE IN EVERY SCREEN
         listenerScrnBtn = false;
-        subtitleVerticalAlignment();
-        subtitleHorizontalAlignment();
       } else {
         $(".gengooSubmit").css({'margin-bottom':'5px', 'height':'25px'});// DEFAULT VALUE IN EVERY SCREEN
         listenerScrnBtn = true;
-        subtitleVerticalAlignment();
-        subtitleHorizontalAlignment();
       }
     },100)
 
@@ -71,14 +67,10 @@ function main() {
       // TO SET SUBTITLE POSITION WHILE CLICKING TO THE SCREEN BUTTON
       if (listenerScrnBtn == false) {
         $(".gengooSubmit").css({'margin-bottom':'5px', 'height':'25px'});// DEFAULT VALUE IN EVERY SCREEN
-        subtitleVerticalAlignment();
-        subtitleHorizontalAlignment();
         listenerScrnBtn = true;
       } else {
         listenerScrnBtn = false;
         $(".gengooSubmit").css({'margin-bottom':'5px', 'height':'45px'});// DEFAULT VALUE IN EVERY SCREEN
-        subtitleVerticalAlignment();
-        subtitleHorizontalAlignment();
       }
     });
 
@@ -230,13 +222,16 @@ function waitForClick() {
 }
 
 function textPusher() {
-  
-  var autoTranslateControl = document.querySelector("#ytp-id-18 > div > div > div:nth-child(4) > div.ytp-menuitem-content").textContent;
-  if ( autoTranslateControl.indexOf('auto-generated') != -1) {
-    autoTranslatedSubtitle();
-  } else {
-    noneAutoTranslatedSubtitle();
-  }
+  console.log('içerdema')
+  document.querySelectorAll('.ytp-menuitem').forEach((item)=>{
+    if ( item.textContent.indexOf('Subtitles') != -1 ) {
+      if ( item.textContent.indexOf('auto-generated') != -1 ) {
+        autoTranslatedSubtitle();
+      } else {
+        noneAutoTranslatedSubtitle();
+      }
+    }
+  })
 }
 
 function autoTranslatedSubtitle() {
@@ -253,7 +248,7 @@ function autoTranslatedSubtitle() {
       subtitleVerticalAlignment();
     }
     oldCaption = $('.caption-visual-line').last().text(); // EQUAL THE TEXTS
-}, 100);
+}, 50);
 }
 
 function noneAutoTranslatedSubtitle() {
@@ -269,7 +264,7 @@ function noneAutoTranslatedSubtitle() {
       waitForClick();
     }
     oldCaption = $('.caption-visual-line').last().text(); // EQUAL THE TEXTS
-}, 100);
+}, 50);
 }
 
 function createNewLine() {
