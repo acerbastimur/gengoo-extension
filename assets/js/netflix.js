@@ -13,7 +13,7 @@ function main() {
   }, 150);
   setInterval(() => {
     if (isPlaying() == "Playing") {
-      hideTranslateArea();
+      //hideTranslateArea();
     }
   }, 1000);
 
@@ -22,7 +22,7 @@ function main() {
 }
 
 function appendTranslateArea() {
-  $("body").append("<div class='translateArea'></div>");
+  $("body").prepend("<div class='translateArea'></div>");
 }
 
 function pauseVideo() {
@@ -208,25 +208,25 @@ const popupResponsive = e => {
     $('.translateArea').show();
     $('.translateArea').css({'margin-top':top- height})
     $('.translateArea').stop().animate({marginLeft:calculation},300)
-    hidePopUp();
+    //hidePopUp();
   } else {
     cancelHiding();
     $('.translateArea').show();
     const calculation = left.left + ( translated_word_width - width ) / 2;
     $('.translateArea').css({'margin-top':top - height})
     $('.translateArea').stop().animate({marginLeft:calculation},300)
-    hidePopUp();
+    //hidePopUp();
   }
 };
 
-function hidePopUp() {
-  timer = setTimeout(function(){
-    $('.translateArea').hide();
-    if ( !isPlaying() ) {
-      playVideo();
-    }
-  },2000);
-};
+// function hidePopUp() {
+//   timer = setTimeout(function(){
+//     $('.translateArea').hide();
+//     if ( !isPlaying() ) {
+//       playVideo();
+//     }
+//   },2000);
+// };
 
 function cancelHiding() {
   clearTimeout(timer);

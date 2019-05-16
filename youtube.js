@@ -129,7 +129,7 @@ function ifUrlChange() {
   }, 300);
 }
 
-function popUp(e, translatedText, translatedText1, translatedText2) {
+function popUp(e, translatedText, translatedText1, translatedText2, state) {
   removeChosenTrans();
   appendTrans();
   var choosenTrans = $(".choosenTrans");
@@ -159,7 +159,11 @@ function popUp(e, translatedText, translatedText1, translatedText2) {
   var itemTop = e.currentTarget.offsetTop - choosenTrans.innerHeight();
   var clickedWith = clickedElement.width();
   var translateWith = choosenTrans.outerWidth( true );
-  var clickedLeft = e.target.offsetLeft + ($('.html5-main-video').width() - $('.'+e.target.offsetParent.className).width())/2;
+  if (state) {
+    var clickedLeft = e.target.offsetLeft + 20;
+  } else {
+    var clickedLeft = e.target.offsetLeft + ($('.html5-main-video').width() - $('.'+e.target.offsetParent.className).width())/2;
+  }
   if (clickedWith >= translateWith) {
     var itemLeft = clickedLeft + (clickedWith - translateWith) / 2;
   } else {
@@ -208,12 +212,12 @@ function appendGengooSubtitle() {
   }, 300);
 }
 
-function waitForClick() {
+function waitForClick(state) {
   $(".gengooSubtitle").stop().click(e => {
     do {
       // DO WHILE BECAUSE WE WANT IT TO START ONCE
       if (_global.wordLeft > 0) {
-        translate(e, e.target.innerText); // FIRST TRANSLATE WORD THAN INITIALIZE FOR UI
+        translate(e, e.target.innerText,state); // FIRST TRANSLATE WORD THAN INITIALIZE FOR UI
         _global.wordLeft = _global.wordLeft -1
         wordLeftUpdater(_global.wordLeft)
       }
@@ -241,7 +245,8 @@ function autoTranslatedSubtitle() {
     newCaption = $('.caption-visual-line').last().text(); // Last line of the pushed caption
     if ( newCaption.length < oldCaption.length ) {  // If the youtube push new caption line
       createNewLine();
-      waitForClick();
+      var state = true;
+      waitForClick(state);
     } else if ( newCaption != oldCaption ) {
       $('.gengooSubtitle').empty();
       parser();
@@ -261,7 +266,8 @@ function noneAutoTranslatedSubtitle() {
       parser(); // parse the new capiton as spaces
       subtitleVerticalAlignment();
       subtitleHorizontalAlignment();
-      waitForClick();
+      var state = false;
+      waitForClick(state);
     }
     oldCaption = $('.caption-visual-line').last().text(); // EQUAL THE TEXTS
 }, 50);
@@ -399,7 +405,7 @@ function removeGengooSubtitle() {
   $(".gengooSubtitle, .topGengooSubtitle").remove();
 }
 
-async function translate(e, word) {
+async function translate(e, word, state) {
 
   if (e.target.className == "gengooWord") {
     var request = new XMLHttpRequest();
@@ -417,7 +423,7 @@ async function translate(e, word) {
       if (request.status >= 200 && request.status < 400) {
         // console.log(e, data[0], data[1], data[2]);
 
-        popUp(e, data[0], data[1], data[2]); // NOW JUST FIRST TRANSLATION IS SENT TO POPUP
+        popUp(e, data[0], data[1], data[2], state); // NOW JUST FIRST TRANSLATION IS SENT TO POPUP
         saveWords(word, data[0]);
         
       } else {
